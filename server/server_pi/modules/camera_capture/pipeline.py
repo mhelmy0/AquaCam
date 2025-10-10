@@ -117,6 +117,8 @@ class CameraPipeline:
         Returns:
             List of command strings for FFmpeg pusher.
         """
+        width, height = self.resolution.split("x")
+
         ffmpeg_cmd = [
             "ffmpeg",
             "-f", "h264",             # Explicitly specify input format
@@ -126,6 +128,7 @@ class CameraPipeline:
             "-analyzeduration", "1000000",  # 1 second analysis for proper stream detection
             "-i", "-",                # Read from stdin
             "-c:v", "copy",           # Copy video stream without re-encoding
+            "-s", self.resolution,    # Explicitly set dimensions for FLV muxer (must be after -i for copy)
             "-f", "flv",              # RTMP uses FLV container
             "-flvflags", "no_duration_filesize",  # Optimize for live streaming
             "-flush_packets", "1",    # Flush packets immediately

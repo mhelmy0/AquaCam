@@ -129,7 +129,7 @@ class RtmpPusher:
 
                 self.logger.log("error", "rtmp_pusher", "publish_drop", {
                     "returncode": returncode,
-                    "stderr": stderr_output[:500] if stderr_output else "No stderr available"
+                    "stderr": stderr_output[:2000] if stderr_output else "No stderr available"
                 }, f"RTMP pusher exited with code {returncode}")
 
                 raise RuntimeError(f"RTMP pusher exited with code {returncode}")
