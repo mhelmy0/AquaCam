@@ -1,0 +1,35 @@
+[Unit]
+Description=RTMP Video Streamer for Raspberry Pi
+Documentation=https://github.com/yourorg/rtmp-streamer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/project/server_pi
+
+# Environment variables
+Environment="PYTHONUNBUFFERED=1"
+Environment="PC_IP=192.168.1.100"
+
+# Start the streamer using the bash wrapper script
+ExecStart=/home/pi/project/server_pi/bin/rtmp_stream.sh --pc-ip ${PC_IP} --config /home/pi/project/server_pi/config.yaml
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rtmp-streamer
+
+# Resource limits (optional)
+# Limit memory to 512 MB
+# MemoryMax=512M
+# MemoryHigh=400M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker manifest inspect:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker pull:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

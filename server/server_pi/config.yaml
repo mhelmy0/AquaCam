@@ -1,0 +1,46 @@
+# Raspberry Pi RTMP Streamer Configuration
+
+camera:
+  # Camera mode: "csi" for CSI camera module, "usb" for USB webcam
+  mode: csi
+
+  # Video resolution (maximum 1080p for Pi HQ camera hardware encoder)
+  resolution: "1920x1080"
+
+  # Frame rate (maximum 30 fps for 1080p)
+  fps: 30
+
+  # Bitrate in kilobits per second (6000 = 6 Mbps for WiFi, increase to 8000-10000 for Ethernet)
+  bitrate_kbps: 6000
+
+  # GOP size - keyframe interval in frames (30 = 1 second at 30 fps for lower latency)
+  gop: 30
+
+rtmp:
+  # RTMP server URL - Pi's localhost since RTMP server runs on Pi
+  url: "rtmp://127.0.0.1/live/cam"
+
+health:
+  # HTTP port for health monitoring endpoint
+  http_port: 8081
+
+logging:
+  # Log level: debug, info, service, error
+  level: info
+
+  # Log file path
+  file: "/var/log/streamer/rtmp_streamer.log"
+
+  # Maximum log file size in MB before rotation
+  rotate_max_mb: 10
+
+  # Number of rotated log files to keep
+  rotate_backups: 5
+
+watchdog:
+  # Enable automatic retry on failure
+  enabled: true
+
+  # Backoff schedule in seconds (with ±10% jitter added automatically)
+  # After the list is exhausted, the last value (30) is repeated indefinitely
+  backoff_seconds: [1, 2, 5, 10, 20, 30]

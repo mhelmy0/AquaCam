@@ -1,0 +1,7 @@
+# Python dependencies for Raspberry Pi RTMP streamer
+
+# YAML configuration parsing
+PyYAML>=6.0
+
+# Optional: Flask for health HTTP endpoint (alternative to http.server)
+# flask>=2.3.0

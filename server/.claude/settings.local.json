@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//usr/bin/**)",
+      "Read(//dev/**)",
+      "Bash(curl -s http://localhost:8081/health)",
+      "Bash(python3:*)",
+      "Bash(timeout:*)",
+      "Bash(ip addr:*)",
+      "Bash(sudo:*)",
+      "Bash(docker ps:*)",
+      "Read(//var/log/streamer/**)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(journalctl:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(echo:*)",
+      "Bash(docker exec:*)",
+      "Bash(rpicam-hello:*)",
+      "Read(//tmp/**)",
+      "Bash(pkill:*)",
+      "Bash(/home/rema/aqua/server_pi/venv/bin/python3 -u -m modules.main --config /home/rema/aqua/server_pi/config.yaml --pc-ip 127.0.0.1)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(rpicam-vid:*)",
+      "Bash(awk:*)",
+      "Bash(xargs -r kill)",
+      "Bash(xargs -r kill -9)",
+      "Bash(docker logs:*)",
+      "Bash(docker restart:*)",
+      "Bash(docker compose:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
