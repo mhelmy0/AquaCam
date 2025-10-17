@@ -1,4 +1,8 @@
-# Raspberry Pi RTMP Streamer Configuration
+# Raspberry Pi Video Streamer Configuration
+# Supports both RTMP and RTP streaming modes
+
+# Streaming mode: "rtmp" or "rtp"
+streaming_mode: rtmp
 
 camera:
   # Camera mode: "csi" for CSI camera module, "usb" for USB webcam
@@ -19,6 +23,19 @@ camera:
 rtmp:
   # RTMP server URL - Pi's localhost since RTMP server runs on Pi
   url: "rtmp://127.0.0.1/live/cam"
+
+rtp:
+  # RTP destination IP address (your PC's IP address)
+  destination_ip: "192.168.1.100"
+
+  # RTP destination port
+  destination_port: 5000
+
+  # Generate SDP file for client configuration (optional)
+  generate_sdp: true
+
+  # SDP file path (if generate_sdp is true)
+  sdp_file: "/tmp/stream.sdp"
 
 health:
   # HTTP port for health monitoring endpoint

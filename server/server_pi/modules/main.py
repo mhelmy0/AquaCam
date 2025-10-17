@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Main entry point for Raspberry Pi RTMP streamer.
+Main entry point for Raspberry Pi video streamer.
 
-This script orchestrates the camera capture, RTMP streaming, health monitoring,
-and retry logic.
+This script orchestrates the camera capture, streaming (RTMP or RTP),
+health monitoring, and retry logic.
 """
 
 import sys
@@ -15,6 +15,7 @@ from modules.config.load import load_config
 from modules.logging.json_logger import JsonLogger
 from modules.camera_capture.pipeline import CameraPipeline
 from modules.rtmp_pusher.pusher import RtmpPusher
+from modules.rtp_pusher.pusher import RtpPusher
 from modules.health.health_http import HealthServer
 from modules.watchdog.retry import RetryWatchdog
 
@@ -22,32 +23,55 @@ from modules.watchdog.retry import RetryWatchdog
 class StreamerApp:
     """Main application coordinator."""
 
-    def __init__(self, config_path: str, pc_ip: Optional[str] = None) -> None:
+    def __init__(self, config_path: str, pc_ip: Optional[str] = None, streaming_mode: Optional[str] = None) -> None:
         """
         Initialize the streamer application.
 
         Args:
             config_path: Path to YAML configuration file.
-            pc_ip: Optional PC IP to override config RTMP URL.
+            pc_ip: Optional PC IP to override config destination.
+            streaming_mode: Optional streaming mode to override config ("rtmp" or "rtp").
         """
         # Load configuration
         self.config = load_config(config_path)
 
-        # Override RTMP URL if PC IP provided
+        # Determine streaming mode (CLI arg > config file > default)
+        self.streaming_mode = streaming_mode or self.config.get("streaming_mode", "rtmp")
+
+        # Override destination if PC IP provided
         if pc_ip:
-            rtmp_url = f"rtmp://{pc_ip}/live/cam"
-            self.config["rtmp"]["url"] = rtmp_url
+            if self.streaming_mode == "rtmp":
+                rtmp_url = f"rtmp://{pc_ip}/live/cam"
+                self.config["rtmp"]["url"] = rtmp_url
+            elif self.streaming_mode == "rtp":
+                self.config["rtp"]["destination_ip"] = pc_ip
 
         # Initialize logger
         self.logger = JsonLogger(self.config)
+
+        # Log startup with appropriate destination
+        if self.streaming_mode == "rtmp":
+            destination = self.config["rtmp"]["url"]
+        else:
+            destination = f"rtp://{self.config['rtp']['destination_ip']}:{self.config['rtp']['destination_port']}"
+
         self.logger.log("service", "main", "app_start", {
             "config": config_path,
-            "rtmp_url": self.config["rtmp"]["url"]
-        }, "RTMP streamer application starting")
+            "streaming_mode": self.streaming_mode,
+            "destination": destination
+        }, f"Video streamer application starting in {self.streaming_mode.upper()} mode")
 
         # Initialize components
-        self.pipeline = CameraPipeline(self.config, self.logger)
-        self.pusher = RtmpPusher(self.pipeline, self.logger)
+        self.pipeline = CameraPipeline(self.config, self.logger, self.streaming_mode)
+
+        # Initialize the appropriate pusher based on streaming mode
+        if self.streaming_mode == "rtmp":
+            self.pusher = RtmpPusher(self.pipeline, self.logger)
+        elif self.streaming_mode == "rtp":
+            self.pusher = RtpPusher(self.pipeline, self.logger)
+        else:
+            raise ValueError(f"Unknown streaming mode: {self.streaming_mode}")
+
         self.health_server = HealthServer(self.config, self.logger)
 
         # Initialize watchdog if enabled
@@ -127,7 +151,7 @@ class StreamerApp:
 def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="RTMP video streamer for Raspberry Pi"
+        description="Video streamer for Raspberry Pi (RTMP or RTP)"
     )
     parser.add_argument(
         "--config",
@@ -136,18 +160,23 @@ def main() -> None:
     )
     parser.add_argument(
         "--pc-ip",
-        help="Windows PC IP address (overrides config rtmp.url)"
+        help="Destination IP address (overrides config destination)"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["rtmp", "rtp"],
+        help="Streaming mode: rtmp or rtp (overrides config streaming_mode)"
     )
     parser.add_argument(
         "--version",
         action="version",
-        version="1.0.0"
+        version="2.0.0"
     )
 
     args = parser.parse_args()
 
     # Create and run application
-    app = StreamerApp(args.config, args.pc_ip)
+    app = StreamerApp(args.config, args.pc_ip, args.mode)
     app.run()
 
 
