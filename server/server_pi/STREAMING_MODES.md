@@ -18,7 +18,7 @@ This streaming system supports two modes of operation: **RTMP** and **RTP**. Bot
 python3 -m modules.main --config config.yaml
 
 # Override with command line
-python3 -m modules.main --config config.yaml --mode rtmp --pc-ip 192.168.1.100
+python3 -m modules.main --config config.yaml --mode rtmp --pc-ip 192.168.100.41 #pc ip
 ```
 
 ### RTP Mode
@@ -27,7 +27,7 @@ python3 -m modules.main --config config.yaml --mode rtmp --pc-ip 192.168.1.100
 python3 -m modules.main --config config.yaml
 
 # Override with command line
-python3 -m modules.main --config config.yaml --mode rtp --pc-ip 192.168.1.100
+python3 -m modules.main --config config.yaml --mode rtp --pc-ip 192.168.100.41 # pc ip
 ```
 
 ## Streaming Modes
@@ -74,7 +74,7 @@ rtmp:
 streaming_mode: rtp
 
 rtp:
-  destination_ip: "192.168.1.100"
+  destination_ip: "192.168.100.41"
   destination_port: 5000
   generate_sdp: true
   sdp_file: "/tmp/stream.sdp"
@@ -164,7 +164,7 @@ vlc rtmp://192.168.1.X/live/cam
 ### 2. RTMP Streaming to Remote Server
 ```bash
 # Stream to remote PC running RTMP server
-python3 -m modules.main --config config.yaml --mode rtmp --pc-ip 192.168.1.100
+python3 -m modules.main --config config.yaml --mode rtmp --pc-ip 192.168.100.41
 
 # View stream with VLC
 vlc rtmp://192.168.1.100/live/cam

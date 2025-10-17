@@ -13,7 +13,7 @@ import signal
 import sys
 
 # --- Stream Configuration ---
-DESTINATION_IP = "192.168.1.100"  # IMPORTANT: Change to your PC's IP address
+DESTINATION_IP = "192.168.100.41"  # IMPORTANT: Change to your PC's IP address
 DESTINATION_PORT = 5000
 WIDTH = 1280
 HEIGHT = 720

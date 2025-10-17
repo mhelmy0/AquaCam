@@ -165,10 +165,14 @@ class CameraPipeline:
 
         ffmpeg_cmd = [
             "ffmpeg",
+            "-re",                    # Read input at native frame rate
             "-f", "h264",             # Input format is raw H.264
             "-i", "-",                # Read from stdin
             "-c:v", "copy",           # Copy video stream without re-encoding
+            "-an",                    # No audio
             "-f", "rtp",              # Output format is RTP
+            "-rtpflags", "latm",      # RTP flags for lower latency
+            "-pkt_size", "1200",      # MTU size for better network compatibility
             "-sdp_file", self.rtp_sdp_file if self.rtp_generate_sdp else "",  # SDP file for client config
             f"rtp://{self.rtp_destination_ip}:{self.rtp_destination_port}"
         ]
