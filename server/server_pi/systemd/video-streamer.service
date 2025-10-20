@@ -1,5 +1,5 @@
 [Unit]
-Description=Video Streamer for Raspberry Pi (RTMP/RTP)
+Description=Video Streamer for Raspberry Pi (RTP/RTMP)
 Documentation=https://github.com/yourorg/video-streamer
 After=network-online.target
 Wants=network-online.target
@@ -14,8 +14,9 @@ WorkingDirectory=/home/rema/server/server_pi
 Environment="PYTHONUNBUFFERED=1"
 Environment="PC_IP=192.168.100.41"
 
-# Start the streamer - use system python3 or venv if available
-ExecStart=/usr/bin/python3 -u -m modules.main --config /home/rema/server/server_pi/config.yaml --mode rtp --pc-ip ${PC_IP}
+# Start the streamer - defaults to RTP mode from config.yaml
+# Override mode with --mode rtmp if needed
+ExecStart=/usr/bin/python3 -u -m modules.main --config /home/rema/server/server_pi/config.yaml --pc-ip ${PC_IP}
 
 # Restart policy
 Restart=always

@@ -2,7 +2,7 @@
 # Supports both RTMP and RTP streaming modes
 
 # Streaming mode: "rtmp" or "rtp"
-streaming_mode: rtmp
+streaming_mode: rtp
 
 camera:
   # Camera mode: "csi" for CSI camera module, "usb" for USB webcam
@@ -26,7 +26,7 @@ rtmp:
 
 rtp:
   # RTP destination IP address (your PC's IP address)
-  destination_ip: "192.168.1.100"
+  destination_ip: "192.168.100.41"
 
   # RTP destination port
   destination_port: 5000
@@ -46,7 +46,7 @@ logging:
   level: info
 
   # Log file path
-  file: "/var/log/streamer/rtmp_streamer.log"
+  file: "/var/log/streamer/video_streamer.log"
 
   # Maximum log file size in MB before rotation
   rotate_max_mb: 10
