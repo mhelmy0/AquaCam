@@ -1,0 +1,112 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+.cache/
+tmp/
+temp/
+
+# Test outputs
+test.h264
+*.h264
+*.mp4
+*.mkv
+*.avi
+*.flv
+
+# SDP files (generated at runtime)
+*.sdp
+
+# Claude Code settings (local only)
+.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Credentials and secrets
+.env
+.env.local
+*.key
+*.pem
+credentials.json
+secrets.yaml
+
+# System files (parent directory)
+../.bash_history
+../.python_history
+../.cache/
+../.local/
+../.config/
+../.ssh/
+../.docker/
+../.vscode-server/
+../.wget-hsts
+../.git-credentials
+../.gitconfig
+../.npm/
+../.claude*
+../.Xauthority
+../.xsession-errors*
+
+# Backup files
+*.backup
+*~
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Documentation builds
+_build/
+docs/_build/

@@ -60,15 +60,17 @@ class CameraPipeline:
         libcamera_cmd = [
             "rpicam-vid",
             "--inline",              # Inline headers for each I-frame
+            "--flush",               # Flush buffers immediately for lower latency
             "-t", "0",               # Run indefinitely
             "--width", width,
             "--height", height,
             "--framerate", str(self.fps),
             "--codec", "h264",
-            "--profile", "baseline", # Baseline profile for better compatibility
-            "--level", "4",          # H.264 level 4.0
+            "--profile", "main",     # Main profile (better compression than baseline, wider compatibility)
+            "--level", "4.1",        # H.264 level 4.1 (supports 1080p30)
             "--bitrate", str(self.bitrate_kbps * 1000),  # Convert to bps
             "--intra", str(self.gop),
+            "--denoise", "cdn_off",  # Disable denoise to reduce latency (enable if image is noisy)
             "-o", "-"                # Output to stdout
         ]
 
@@ -171,8 +173,11 @@ class CameraPipeline:
             "-c:v", "copy",           # Copy video stream without re-encoding
             "-an",                    # No audio
             "-f", "rtp",              # Output format is RTP
-            "-rtpflags", "latm",      # RTP flags for lower latency
-            "-pkt_size", "1200",      # MTU size for better network compatibility
+            "-rtpflags", "latm+send_bye",  # RTP flags for lower latency + clean shutdown
+            "-pkt_size", "1200",      # MTU size for better network compatibility (1500 - IP/UDP headers)
+            "-max_delay", "500000",   # Maximum muxing delay in microseconds (500ms)
+            "-buffer_size", "2M",     # Buffer size for rate control
+            "-flush_packets", "1",    # Flush packets immediately
             "-sdp_file", self.rtp_sdp_file if self.rtp_generate_sdp else "",  # SDP file for client config
             f"rtp://{self.rtp_destination_ip}:{self.rtp_destination_port}"
         ]

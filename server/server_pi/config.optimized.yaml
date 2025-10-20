@@ -1,0 +1,114 @@
+# Raspberry Pi Video Streamer Configuration - OPTIMIZED FOR QUALITY
+# This configuration is optimized for lower latency and better reliability
+
+# Streaming mode: "rtmp" or "rtp"
+streaming_mode: rtp
+
+camera:
+  # Camera mode: "csi" for CSI camera module, "usb" for USB webcam
+  mode: csi
+
+  # Video resolution (maximum 1080p for Pi HQ camera hardware encoder)
+  # Options: "1920x1080", "1280x720", "640x480"
+  # Recommendation: Use 720p for better performance on WiFi
+  resolution: "1280x720"
+
+  # Frame rate (maximum 30 fps for 1080p, up to 60 fps for 720p)
+  # Recommendation: 30fps for stability, 60fps for smoother motion
+  fps: 30
+
+  # Bitrate in kilobits per second
+  # WiFi (2.4GHz): 2000-4000 kbps recommended
+  # WiFi (5GHz): 4000-8000 kbps recommended
+  # Ethernet: 6000-10000 kbps recommended
+  # Lower bitrate = more compression artifacts, but more stable
+  # Higher bitrate = better quality, but requires better network
+  bitrate_kbps: 4000
+
+  # GOP size - keyframe interval in frames
+  # Lower GOP = faster recovery from packet loss, higher bitrate
+  # Higher GOP = more efficient compression, slower recovery
+  # Recommendation: 15 for WiFi (0.5s at 30fps), 30 for Ethernet (1s at 30fps)
+  gop: 15
+
+rtmp:
+  # RTMP server URL - Pi's localhost since RTMP server runs on Pi
+  url: "rtmp://127.0.0.1/live/cam"
+
+rtp:
+  # RTP destination IP address (your PC's IP address)
+  destination_ip: "192.168.100.41"
+
+  # RTP destination port
+  destination_port: 5000
+
+  # Generate SDP file for client configuration (recommended: true)
+  generate_sdp: true
+
+  # SDP file path (if generate_sdp is true)
+  sdp_file: "/tmp/stream.sdp"
+
+health:
+  # HTTP port for health monitoring endpoint
+  http_port: 8081
+
+logging:
+  # Log level: debug, info, service, error
+  # debug - Very verbose, includes all stderr monitoring
+  # info - Standard logging (recommended)
+  # service - Only important service events
+  # error - Only errors
+  level: info
+
+  # Log file path
+  file: "/var/log/streamer/video_streamer.log"
+
+  # Maximum log file size in MB before rotation
+  rotate_max_mb: 10
+
+  # Number of rotated log files to keep
+  rotate_backups: 5
+
+watchdog:
+  # Enable automatic retry on failure
+  enabled: true
+
+  # Backoff schedule in seconds (with ±10% jitter added automatically)
+  # After the list is exhausted, the last value (30) is repeated indefinitely
+  backoff_seconds: [1, 2, 5, 10, 20, 30]
+
+# ============================================================================
+# OPTIMIZATION NOTES
+# ============================================================================
+#
+# For BEST QUALITY on Ethernet:
+#   resolution: "1920x1080"
+#   fps: 30
+#   bitrate_kbps: 8000
+#   gop: 30
+#
+# For BEST PERFORMANCE on WiFi 5GHz:
+#   resolution: "1280x720"
+#   fps: 30
+#   bitrate_kbps: 4000
+#   gop: 15
+#
+# For LOWEST LATENCY on any network:
+#   resolution: "1280x720"
+#   fps: 30
+#   bitrate_kbps: 3000
+#   gop: 10
+#
+# For UNSTABLE NETWORK (frequent packet loss):
+#   resolution: "1280x720"
+#   fps: 25
+#   bitrate_kbps: 2000
+#   gop: 10
+#
+# For SMOOTH MOTION (sports, action):
+#   resolution: "1280x720"
+#   fps: 60
+#   bitrate_kbps: 6000
+#   gop: 30
+#
+# ============================================================================
