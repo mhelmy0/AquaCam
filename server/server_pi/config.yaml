@@ -9,14 +9,14 @@ camera:
   mode: csi
 
   # Video resolution (maximum 1080p for Pi HQ camera hardware encoder)
-  resolution: "1920x1080"
+  resolution: "1280x720"
 
   # Frame rate (maximum 30 fps for 1080p)
-  fps: 30
+  fps: 20
 
-  # Bitrate in kilobits per second (6000 = 6 Mbps for WiFi, increase to 8000-10000 for Ethernet)
-  bitrate_kbps: 6000
-
+  # Bitrate in kilobits per second (3500 = 3.5 Mbps for 720p, lower bandwidth and file size)
+  bitrate_kbps: 3500
+  # bitrate_kbps: 10000
   # GOP size - keyframe interval in frames (30 = 1 second at 30 fps for lower latency)
   gop: 30
 
